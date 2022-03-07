@@ -1,0 +1,30 @@
+<div class="p-xl" [ngSwitch]="status$ | async">
+  <ng-container *ngSwitchCase="Status.Loading">
+    <ng-container *ngTemplateOutlet="loadingSkeleton"></ng-container>
+  </ng-container>
+  <ng-container *ngSwitchCase="Status.Loaded">
+    <ng-container *ngTemplateOutlet="authors"></ng-container>
+  </ng-container>
+  <strong *ngSwitchCase="Status.Error">Something went wrong :(</strong>
+</div>
+
+<ng-template #loadingSkeleton>
+  <mat-list role="list">
+    <mat-list-item *ngFor="let i of [0, 1, 2]" role="listitem">
+      <ngx-skeleton-loader
+        [theme]="{ width: '200px', height: '30px' }"
+      ></ngx-skeleton-loader>
+    </mat-list-item>
+  </mat-list>
+</ng-template>
+
+<ng-template #authors>
+  <mat-list role="list">
+    <mat-list-item *ngFor="let author of authors$ | async" role="listitem">
+      <span>{{ author }}</span>
+      <a class="ml-md" [routerLink]="['../', 'author', author]"
+        ><mat-icon>library_books</mat-icon></a
+      >
+    </mat-list-item>
+  </mat-list>
+</ng-template>

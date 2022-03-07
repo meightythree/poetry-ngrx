@@ -1,0 +1,49 @@
+<mat-drawer-container>
+  <mat-drawer mode="side" opened>
+    <ng-container *ngTemplateOutlet="sideNavContent"></ng-container>
+  </mat-drawer>
+  <mat-drawer-content>
+    <ng-container *ngTemplateOutlet="mainContent"></ng-container>
+  </mat-drawer-content>
+</mat-drawer-container>
+
+<ng-template #mainContent>
+  <div class="main-content">
+    <app-poem *ngIf="selectedPoem$ | async as poem" [poem]="poem"></app-poem>
+  </div>
+</ng-template>
+
+<ng-template #sideNavContent>
+  <div class="p-xl">
+    <strong class="title">{{ author$ | async }}</strong>
+
+    <div [ngSwitch]="status$ | async">
+      <ng-container *ngSwitchCase="Status.Loaded">
+        <ng-container *ngTemplateOutlet="poemList"></ng-container>
+      </ng-container>
+      <ng-container *ngSwitchCase="Status.Loading">
+        <ng-container *ngTemplateOutlet="loadingSkeleton"></ng-container>
+      </ng-container>
+      <strong *ngSwitchCase="Status.Error">Something went wrong :(</strong>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #poemList>
+  <mat-list role="list">
+    <mat-list-item *ngFor="let poem of poemTitles$ | async" role="listitem">
+      <span>{{ poem.title | slice: 0:32 }}</span>
+      <mat-icon (click)="setSelectedPoem(poem.title)">arrow_right_alt</mat-icon>
+    </mat-list-item>
+  </mat-list>
+</ng-template>
+
+<ng-template #loadingSkeleton>
+  <mat-list role="list">
+    <mat-list-item *ngFor="let i of [0, 1, 2]" role="listitem">
+      <ngx-skeleton-loader
+        [theme]="{ width: '200px', height: '30px' }"
+      ></ngx-skeleton-loader>
+    </mat-list-item>
+  </mat-list>
+</ng-template>

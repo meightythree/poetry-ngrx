@@ -1,0 +1,10 @@
+<ng-container *ngIf="poem">
+  <strong class="title">{{ poem.title }}</strong>
+
+  <div class="lines-container">
+    <ng-container *ngFor="let line of poem.lines">
+      <p *ngIf="line !== ''; else br">{{ line }}</p>
+      <ng-template #br><br /></ng-template>
+    </ng-container>
+  </div>
+</ng-container>
